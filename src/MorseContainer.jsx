@@ -12,6 +12,18 @@ const timerRef = useRef();
     setMorseText(newString)
   }
 
+  function handleKeyPress(e) {
+    if (e.key === ' ') {
+      console.log('space pressed');
+      let newString = morseText + ' ';
+      setMorseText(newString);
+    }
+  }
+
+  function clearInput() {
+    setMorseText('')
+  }
+
   function clickDuration() {
     timerRef.current = setTimeout(() => {
       setLongPress(true);
@@ -48,7 +60,10 @@ const timerRef = useRef();
   }
 
   return (
-    <div>
+    <div onKeyDown ={(event) => {
+      handleKeyPress(event)
+    }}
+    tabIndex='0'>
     Main Container Component
     <form>
       <input className='form' placeholder='Your morse input here.' type='text' onChange={(e)=>{handleTextChange(e)}} value={morseText}/>
@@ -58,6 +73,7 @@ const timerRef = useRef();
     handleOnMouseUp={handleOnMouseUp}
     handleOnTouchStart={handleOnTouchStart}
     handleOnTouchEnd={handleOnTouchEnd}
+    clearInput={clearInput}
     />
   </div>
   )
