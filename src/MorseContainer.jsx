@@ -1,17 +1,21 @@
 import React from 'react';
 import MorseArea from './MorseArea.jsx';
 import {useState, useRef} from 'react';
+import dict from './MorseDictionary.js';
 function MorseContainer() {
 const [morseText, setMorseText] = useState('');
 const [longPress, setLongPress]  = useState(false);
 const [delay, setDelay] = useState(300);
 const timerRef = useRef();
+const [translated, setTranslated] = useState([]);
 
+  //Be able to type text in manually to the box
   function handleTextChange(e) {
     let newString = e.target.value;
     setMorseText(newString)
   }
 
+  //Detect pressing space anywhere to add a space between words for the input
   function handleKeyPress(e) {
     if (e.key === ' ') {
       console.log('space pressed');
@@ -20,10 +24,20 @@ const timerRef = useRef();
     }
   }
 
+  function handleTranslate() {
+    let morseCopy = morseText.slice().split(' ');
+    morseCopy.forEach((group, i) => {
+        morseCopy[i] = dict[group] || '?';
+    });
+    setTranslated(morseCopy);
+  }
+
+  //Clear text box
   function clearInput() {
     setMorseText('')
   }
 
+  //Setting a ref to have a timer to add a dash as the input if release isnt found within <delay> miliseconds
   function clickDuration() {
     timerRef.current = setTimeout(() => {
       setLongPress(true);
@@ -32,15 +46,15 @@ const timerRef = useRef();
     }, delay)
   }
 
+  //event handlers for click down/up or touch start/end
   function handleOnMouseDown() {
     console.log('handleOnMouseDown');
     clickDuration();
-    // let newString = morseText + '.';
-    // setMorseText(newString);
   }
 
   function handleOnMouseUp() {
     console.log('handleOnMouseUp');
+    // clearing the timeout for the long press, adding a dot if longpress threshold to add dash was not reached
     clearTimeout(timerRef.current);
     if (!longPress) {
       let newString = morseText + '.';
@@ -74,6 +88,9 @@ const timerRef = useRef();
     handleOnTouchStart={handleOnTouchStart}
     handleOnTouchEnd={handleOnTouchEnd}
     clearInput={clearInput}
+    handleTranslate={handleTranslate}
+    translated={translated}
+
     />
   </div>
   )

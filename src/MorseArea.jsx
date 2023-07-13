@@ -12,8 +12,11 @@ var MorseArea = (props) => {
     tabIndex="0"
     >Click here to input Morse</button>
     <div>      placeholder for area</div>
+    <button onClick={props.handleTranslate}> Translate </button>
     <button onClick={props.clearInput}> Clear </button>
-
+    <div>
+      Output: {props.translated.join('')}
+    </div>
     </div>
   )
 }
